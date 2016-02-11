@@ -28,7 +28,7 @@ if not token or not secret:
 connection.authorise_connection(token, secret)
 
 try:
-	nodeUri=User.get_authorized_user(connection)["Uris"]["Node"]["Uri"]
+	nodeUri=User.get_authorized_user(connection)["Uris"]["Node"]
 	children=Node.get_node_children(connection, nodeUri)
 	for child in children:
 		print "Found child: " + child["Name"] + ", type: " + child["Type"]

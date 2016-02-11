@@ -72,7 +72,8 @@ class Connection:
   def make_request(self, uri):
     response=loads(self.__SESSION.get(
           self.__API_ORIGIN + uri,
-          headers={'Accept': 'application/json'}).text)
+          headers={'Accept': 'application/json'},
+          params={'_verbosity': '1'}).text)
 
     if "Response" in response:
       return response["Response"]
