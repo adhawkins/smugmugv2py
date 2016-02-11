@@ -7,14 +7,15 @@ from json import loads
 import smugmugv2py 
 
 class Connection:
+  BASE_URL = '/api/v2'
+
   __OAUTH_ORIGIN = 'https://secure.smugmug.com'
   __REQUEST_TOKEN_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/getRequestToken'
   __ACCESS_TOKEN_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/getAccessToken'
   __AUTHORIZE_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/authorize'
 
   __API_ORIGIN = 'https://api.smugmug.com'
-  __BASE_URL = __API_ORIGIN + '/api/v2'
-
+  
   __SERVICE = None
   __SESSION = None
 
@@ -27,7 +28,7 @@ class Connection:
         request_token_url=self.__REQUEST_TOKEN_URL,
         access_token_url=self.__ACCESS_TOKEN_URL,
         authorize_url=self.__AUTHORIZE_URL,
-        base_url=self.__BASE_URL)
+        base_url=self.BASE_URL)
 
   def add_auth_params(self, auth_url, access=None, permissions=None):
     if access is None and permissions is None:
@@ -70,7 +71,7 @@ class Connection:
 
   def make_request(self, uri):
     response=loads(self.__SESSION.get(
-          self.__BASE_URL + uri,
+          self.__API_ORIGIN + uri,
           headers={'Accept': 'application/json'}).text)
 
     if "Response" in response:
