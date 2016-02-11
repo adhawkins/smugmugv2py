@@ -3,14 +3,17 @@
 from rauth import OAuth1Service, OAuth1Session
 from urlparse import urlsplit, urlunsplit, parse_qsl
 from urllib import urlencode
+from json import loads
+import smugmugv2py 
 
-class SmugMugConnection:
+class Connection:
   __OAUTH_ORIGIN = 'https://secure.smugmug.com'
   __REQUEST_TOKEN_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/getRequestToken'
   __ACCESS_TOKEN_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/getAccessToken'
   __AUTHORIZE_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/authorize'
 
   __API_ORIGIN = 'https://api.smugmug.com'
+  __BASE_URL = __API_ORIGIN + '/api/v2'
 
   __SERVICE = None
   __SESSION = None
@@ -24,7 +27,7 @@ class SmugMugConnection:
         request_token_url=self.__REQUEST_TOKEN_URL,
         access_token_url=self.__ACCESS_TOKEN_URL,
         authorize_url=self.__AUTHORIZE_URL,
-        base_url=self.__API_ORIGIN + '/api/v2')
+        base_url=self.__BASE_URL)
 
   def add_auth_params(self, auth_url, access=None, permissions=None):
     if access is None and permissions is None:
@@ -63,6 +66,15 @@ class SmugMugConnection:
             access_token_secret=token_secret)
 
   def test_connection(self):
-    return self.__SESSION.get(
-          'https://api.smugmug.com/api/v2!authuser',
-          headers={'Accept': 'application/json'}).text
+    return self.make_request("!authuser")
+
+  def make_request(self, uri):
+    response=loads(self.__SESSION.get(
+          self.__BASE_URL + uri,
+          headers={'Accept': 'application/json'}).text)
+
+    if "Response" in response:
+      return response["Response"]
+    else:
+      raise smugmugv2py.SmugMugv2Exception(response["Message"])
+
