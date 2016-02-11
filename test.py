@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from smugmugv2py import Connection, User, SmugMugv2Exception
+from smugmugv2py import Connection, User, SmugMugv2Exception, Node
 from sys import stdout, stdin
 from os import linesep
 from pprint import pprint
@@ -28,12 +28,10 @@ if not token or not secret:
 connection.authorise_connection(token, secret)
 
 try:
-	pprint(User.get_authorized_user(connection))
-except SmugMugv2Exception as e:
-	print "Error: " + str(e)
-
-try: 
-	pprint(User.get_specific_user(connection, "cmac"))
+	nodeUri=User.get_authorized_user(connection)["Uris"]["Node"]["Uri"]
+	children=Node.get_node_children(connection, nodeUri)
+	for child in children:
+		print "Found child: " + child["Name"] + ", type: " + child["Type"]
 except SmugMugv2Exception as e:
 	print "Error: " + str(e)
 
