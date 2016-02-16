@@ -4,10 +4,14 @@ from rauth import OAuth1Service, OAuth1Session
 from urlparse import urlsplit, urlunsplit, parse_qsl
 from urllib import urlencode
 from json import loads
+import requests
 import smugmugv2py 
+from pprint import pprint
+from os import path
 
 class Connection:
   BASE_URL = '/api/v2'
+  UPLOAD_URL = 'https://upload.smugmug.com/'
 
   __OAUTH_ORIGIN = 'https://secure.smugmug.com'
   __REQUEST_TOKEN_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/getRequestToken'
@@ -17,7 +21,7 @@ class Connection:
   __API_ORIGIN = 'https://api.smugmug.com'
   
   __SERVICE = None
-  __SESSION = None
+  __SESSION = requests.Session()
 
   def __init__(self, api_key, api_secret):
     if self.__SERVICE is None:
@@ -69,14 +73,43 @@ class Connection:
   def test_connection(self):
     return self.make_request("!authuser")
 
-  def make_request(self, uri):
+  def get(self, uri):
     response=loads(self.__SESSION.get(
           self.__API_ORIGIN + uri,
           headers={'Accept': 'application/json'},
-          params={'_verbosity': '1'}).text)
+          params={'_verbosity': '1'},
+          header_auth=True
+        ).text)
 
     if "Response" in response:
       return response["Response"]
     else:
       raise smugmugv2py.SmugMugv2Exception(response["Message"])
 
+  def post(self, uri, headers=None, data=None, params=None):
+      return self.raw_post(self.__API_ORIGIN + uri, headers, data, params)
+  
+  def raw_post(self, uri, headers=None, data=None):
+      addHeaders = {'X-Smug-ResponseType': 'JSON', 'X-Smug-Version': 'v2'}
+      fullHeaders= headers.copy()
+      fullHeaders.update(addHeaders)
+      pprint(fullHeaders)
+      response=loads(self.__SESSION.post(
+        uri,
+        headers=fullHeaders,
+        data=data,
+        header_auth=True).content)
+
+      return response
+
+  def upload_image(self, filename, album_uri):
+    headers = {
+      'Content-Type': 'none',
+      'X-Smug-AlbumUri': album_uri, 
+      'X-Smug-FileName': filename, 
+      'Content-Length': path.getsize(filename),
+    }
+    
+    with open("focuszetec.jpeg", "rb") as f:
+      data = f.read()
+      return self.raw_post(self.UPLOAD_URL, data=data, headers=headers)
