@@ -102,7 +102,7 @@ class Connection:
 
       return response
 
-  def upload_image(self, filename, album_uri):
+  def upload_image(self, filename, album_uri, caption=None, title=None, keywords=None):
     headers = {
       'Content-Type': 'none',
       'X-Smug-AlbumUri': album_uri, 
@@ -110,6 +110,15 @@ class Connection:
       'Content-Length': path.getsize(filename),
     }
     
+    if caption:
+      headers['X-Smug-Caption']=caption
+
+    if title:
+      headers['X-Smug-Title']=title
+
+    if keywords:
+      headers['X-Smug-Keywords']=keywords
+      
     with open("focuszetec.jpeg", "rb") as f:
       data = f.read()
       return self.raw_post(self.UPLOAD_URL, data=data, headers=headers)

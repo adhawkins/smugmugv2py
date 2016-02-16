@@ -5,6 +5,7 @@ from sys import stdout, stdin
 from os import linesep, path
 from pprint import pprint
 from test_setup import api_key, api_secret, token, secret
+from datetime import datetime
 
 def do_indent(indent):
 	for x in range(0, indent):
@@ -51,7 +52,11 @@ try:
 	node = Node.get_node(connection, nodeUri)
 	print_node(node, 0)
 
-	pprint(connection.upload_image("focuszetec.jpeg", "/api/v2/album/25cj3F"))
+	pprint(connection.upload_image('focuszetec.jpeg', 
+											'/api/v2/album/25cj3F', 
+											caption='A test caption - ' + str(datetime.now()),
+											title='A test title - ' + str(datetime.now()),
+											keywords='key1; key2; key3'))
 
 except SmugMugv2Exception as e:
 	print "Error: " + str(e)
