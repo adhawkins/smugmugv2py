@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from smugmugv2py import Connection, User, SmugMugv2Exception, Node, Album
+from smugmugv2py import Connection, User, SmugMugv2Exception, Node, Album, SmugMugv2Utils
 from sys import stdout, stdin
 from os import linesep, path
 from pprint import pprint
@@ -12,17 +12,17 @@ def do_indent(indent):
 		stdout.write(" ")
 
 def print_album(node, indent):
-	album = Album.get_album(connection, node["Uris"]["Album"])
-	stdout.write(", " + str(album["ImageCount"]) + " images")
+	album = Album(SmugMugv2Utils.get_album(connection, node.album))
+	stdout.write(", " + str(album.image_count) + " images")
 
 def print_node(node, indent):
 	do_indent(indent)
-	stdout.write("'" + node["Name"] + "' (" + node["Type"] + ") - " + node["Privacy"])
-	if node["Type"]=="Album":
+	stdout.write("'" + node.name + "' (" + node.type + ") - " + node.privacy)
+	if node.type == "Album":
 		print_album(node, indent)
 	print
-	if node["HasChildren"]:
-		children=Node.get_node_children(connection, node)
+	if node.has_children:
+		children=node.get_children(connection)
 		for child in children:
 			print_node(child, indent+1)
 
@@ -48,15 +48,19 @@ if not token or not secret:
 connection.authorise_connection(token, secret)
 
 try:
-	nodeUri=User.get_authorized_user(connection)["Uris"]["Node"]
-	node = Node.get_node(connection, nodeUri)
+	user=User(SmugMugv2Utils.get_authorized_user(connection))
+	print "User: " + user.nickname + " (" + user.name + ")"
+
+	node = Node(SmugMugv2Utils.get_node(connection, user.node))
+	children = node.get_children(connection)
+	
 	print_node(node, 0)
 
-	pprint(connection.upload_image('focuszetec.jpeg', 
-											'/api/v2/album/25cj3F', 
-											caption='A test caption - ' + str(datetime.now()),
-											title='A test title - ' + str(datetime.now()),
-											keywords='key1; key2; key3'))
+	#pprint(connection.upload_image('focuszetec.jpeg', 
+	#										'/api/v2/album/25cj3F', 
+	#										caption='A test caption - ' + str(datetime.now()),
+	#										title='A test title - ' + str(datetime.now()),
+	#										keywords='key1; key2; key3'))
 
 except SmugMugv2Exception as e:
 	print "Error: " + str(e)
