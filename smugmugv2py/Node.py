@@ -1,3 +1,5 @@
+from json import dumps
+
 class Node:
 	def __init__(self, node):
 		self.uri = node["Uri"]
@@ -15,10 +17,12 @@ class Node:
 		ret=[]
 
 		if self.has_children:
-			nodes = connection.get(self.__child_nodes)["Node"]
-			for node in nodes:
-				thisnode = Node(node)
-				ret.append(thisnode)
+			response = connection.get(self.__child_nodes)
+			if 'Node' in response:
+				nodes=response["Node"]
+				for node in nodes:
+					thisnode = Node(node)
+					ret.append(thisnode)
 
 		return ret
 

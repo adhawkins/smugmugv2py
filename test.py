@@ -57,7 +57,7 @@ try:
 	node = Node(SmugMugv2Utils.get_node(connection, user.node))
 	children = node.get_children(connection)
 	
-	#print_node(node, 0)
+	print_node(node, 0)
 
 	new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
 	print new_node.uri + " - " + new_node.name
