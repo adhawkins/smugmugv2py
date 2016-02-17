@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from smugmugv2py import Connection, User, SmugMugv2Exception, Node, Album, SmugMugv2Utils
+from smugmugv2py import Connection, User, SmugMugv2Exception, Node, Album, AlbumImage, SmugMugv2Utils
 from sys import stdout, stdin
 from os import linesep, path
 from pprint import pprint
@@ -14,6 +14,10 @@ def do_indent(indent):
 def print_album(node, indent):
 	album = Album(SmugMugv2Utils.get_album(connection, node.album))
 	stdout.write(", " + str(album.image_count) + " images")
+	images = album.get_images(connection)
+	for image in images:
+		do_indent(indent+1)
+		print image.filename + " - " + image.caption
 
 def print_node(node, indent):
 	do_indent(indent)
@@ -21,10 +25,9 @@ def print_node(node, indent):
 	if node.type == "Album":
 		print_album(node, indent)
 	print
-	if node.has_children:
-		children=node.get_children(connection)
-		for child in children:
-			print_node(child, indent+1)
+	children=node.get_children(connection)
+	for child in children:
+		print_node(child, indent+1)
 
 connection = Connection(api_key, api_secret)
 
@@ -55,6 +58,12 @@ try:
 	children = node.get_children(connection)
 	
 	print_node(node, 0)
+
+	#response=node.create_child_folder(connection, 'testnode2','atestnode2','Public')
+	#pprint(response)
+
+	#response=node.create_child_album(connection, 'testalbum2','atestalbum2','Public', 'A long description for the album')
+	#pprint(response)
 
 	#pprint(connection.upload_image('focuszetec.jpeg', 
 	#										'/api/v2/album/25cj3F', 

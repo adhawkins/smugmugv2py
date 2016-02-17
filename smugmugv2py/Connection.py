@@ -6,7 +6,6 @@ from urllib import urlencode
 from json import loads
 import requests
 import smugmugv2py 
-from pprint import pprint
 from os import path
 
 class Connection:
@@ -34,7 +33,7 @@ class Connection:
         authorize_url=self.__AUTHORIZE_URL,
         base_url=self.BASE_URL)
 
-  def add_auth_params(self, auth_url, access=None, permissions=None):
+  def __add_auth_params(self, auth_url, access=None, permissions=None):
     if access is None and permissions is None:
       return auth_url
     parts = urlsplit(auth_url)
@@ -53,7 +52,7 @@ class Connection:
   def get_auth_url(self, access=None, permissions=None):
     self.__rt, self.__rts = self.__SERVICE.get_request_token(params={'oauth_callback': 'oob'})
 
-    auth_url = self.add_auth_params(
+    auth_url = self.__add_auth_params(
           self.__SERVICE.get_authorize_url(self.__rt), access=access, permissions=permissions)
 
     return auth_url
@@ -70,9 +69,6 @@ class Connection:
             access_token=token,
             access_token_secret=token_secret)
 
-  def test_connection(self):
-    return self.make_request("!authuser")
-
   def get(self, uri):
     response=loads(self.__SESSION.get(
           self.__API_ORIGIN + uri,
@@ -86,24 +82,23 @@ class Connection:
     else:
       raise smugmugv2py.SmugMugv2Exception(response["Message"])
 
-  def post(self, uri, headers=None, data=None, params=None):
-      return self.raw_post(self.__API_ORIGIN + uri, headers, data, params)
+  def post(self, uri, headers=None, data=None):
+      return self.raw_post(self.__API_ORIGIN + uri, headers, data)
   
   def raw_post(self, uri, headers=None, data=None):
-      addHeaders = {'X-Smug-ResponseType': 'JSON', 'X-Smug-Version': 'v2'}
-      fullHeaders= headers.copy()
-      fullHeaders.update(addHeaders)
-      pprint(fullHeaders)
       response=loads(self.__SESSION.post(
         uri,
-        headers=fullHeaders,
+        headers=headers,
         data=data,
+        params={'_verbosity': '1'},
         header_auth=True).content)
 
       return response
 
   def upload_image(self, filename, album_uri, caption=None, title=None, keywords=None):
     headers = {
+      'X-Smug-ResponseType': 'JSON', 
+      'X-Smug-Version': 'v2',
       'Content-Type': 'none',
       'X-Smug-AlbumUri': album_uri, 
       'X-Smug-FileName': filename, 
