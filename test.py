@@ -57,13 +57,15 @@ try:
 	node = Node(SmugMugv2Utils.get_node(connection, user.node))
 	children = node.get_children(connection)
 	
-	print_node(node, 0)
+	#print_node(node, 0)
 
-	new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
-	print new_node.uri + " - " + new_node.name
+	#new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
+	#print new_node.uri + " - " + new_node.name
 
-	new_node=Node(node.create_child_album(connection, 'aaaatestalbum2','aaaaatestalbum2','Public', 'A long description for the album'))
-	print new_node.uri + " - " + new_node.name
+	#new_node=Node(node.create_child_album(connection, 'aaaatestalbum2','aaaaatestalbum2','Public', 'A long description for the album'))
+	#print new_node.uri + " - " + new_node.name
+	#pprint(new_node.album)
+	#album=Album(SmugMugv2Utils.get_album(connection, new_node.album))
 
 	#pprint(connection.upload_image('focuszetec.jpeg', 
 	#										'/api/v2/album/25cj3F', 
