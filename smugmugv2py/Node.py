@@ -9,7 +9,10 @@ class Node:
 		self.has_children = node["HasChildren"]
 
 		if self.type == "Album":
-			self.album = node["Uris"]["Album"]
+			if "Uri" in node["Uris"]["Album"]:
+				self.album = node["Uris"]["Album"]["Uri"]
+			else:
+				self.album = node["Uris"]["Album"]
 		else:
 			self.__child_nodes = node["Uris"]["ChildNodes"]
 
