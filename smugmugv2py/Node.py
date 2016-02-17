@@ -1,5 +1,3 @@
-from json import dumps
-
 class Node:
 	def __init__(self, node):
 		self.uri = node["Uri"]
@@ -40,10 +38,10 @@ class Node:
 		if description:
 			params['Description']=description
 			
-		return connection.post(self.child_nodes, data=dumps(params), headers=headers)
+		return connection.post(self.__child_nodes, data=dumps(params), headers=headers)
 
 	def create_child_folder(self, connection, name, url, privacy, description=None):
-		return self.__create_child_node(connection, 'Folder', name, url, privacy, description)
+		return self.__create_child_node(connection, 'Folder', name, url, privacy, description)["Response"]["Node"]
 
 	def create_child_album(self, connection, name, url, privacy, description=None):
-		return self.__create_child_node(connection, 'Album', name, url, privacy, description)
+		return self.__create_child_node(connection, 'Album', name, url, privacy, description)["Response"]["Node"]
