@@ -1,9 +1,11 @@
 from json import dumps
+from pprint import pprint
 
 class Node:
 	def __init__(self, node):
 		self.uri = node["Uri"]
 		self.name = node["Name"]
+		self.url_name = node["UrlName"]
 		self.type = node["Type"]
 		self.privacy = node["Privacy"]
 		self.has_children = node["HasChildren"]
@@ -14,7 +16,10 @@ class Node:
 			else:
 				self.album = node["Uris"]["Album"]
 		else:
-			self.__child_nodes = node["Uris"]["ChildNodes"]
+			if "Uri" in node["Uris"]["ChildNodes"]:
+				self.__child_nodes = node["Uris"]["ChildNodes"]["Uri"]
+			else:
+				self.__child_nodes = node["Uris"]["ChildNodes"]
 
 	def get_children(self, connection):
 		ret=[]
@@ -48,7 +53,17 @@ class Node:
 		return connection.post(self.__child_nodes, data=dumps(params), headers=headers)
 
 	def create_child_folder(self, connection, name, url, privacy, description=None):
-		return self.__create_child_node(connection, 'Folder', name, url, privacy, description)["Response"]["Node"]
+		response = self.__create_child_node(connection, 'Folder', name, url, privacy, description)
+	
+		if not "Node" in response["Response"]:
+			pprint(response)
+
+		return response["Response"]["Node"]
 
 	def create_child_album(self, connection, name, url, privacy, description=None):
-		return self.__create_child_node(connection, 'Album', name, url, privacy, description)["Response"]["Node"]
+		response = self.__create_child_node(connection, 'Album', name, url, privacy, description)
+	
+		if not "Node" in response["Response"]:
+			pprint(response)
+	
+		return response["Response"]["Node"]

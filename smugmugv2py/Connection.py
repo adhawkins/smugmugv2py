@@ -8,9 +8,11 @@ import requests
 import smugmugv2py 
 from os import path
 
+from pprint import pprint
+
 class Connection:
   BASE_URL = '/api/v2'
-  UPLOAD_URL = 'https://upload.smugmug.com/'
+  UPLOAD_URL = 'http://upload.smugmug.com/'
 
   __OAUTH_ORIGIN = 'https://secure.smugmug.com'
   __REQUEST_TOKEN_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/getRequestToken'
@@ -73,7 +75,11 @@ class Connection:
     response=loads(self.__SESSION.get(
           self.__API_ORIGIN + uri,
           headers={'Accept': 'application/json'},
-          params={'_verbosity': '1'},
+          params={
+            '_verbosity': '1',
+            'start': '1',
+            'count': '9999'
+          },
           header_auth=True
         ).text)
 
@@ -83,17 +89,17 @@ class Connection:
       raise smugmugv2py.SmugMugv2Exception(response["Message"])
 
   def post(self, uri, headers=None, data=None):
-      return self.raw_post(self.__API_ORIGIN + uri, headers, data)
+    return self.raw_post(self.__API_ORIGIN + uri, headers, data)
   
   def raw_post(self, uri, headers=None, data=None):
-      response=loads(self.__SESSION.post(
-        uri,
-        headers=headers,
-        data=data,
-        params={'_verbosity': '1'},
-        header_auth=True).content)
+    response=loads(self.__SESSION.post(
+      uri,
+      headers=headers,
+      data=data,
+      #params={'_verbosity': '1'},
+      header_auth=True).content)
 
-      return response
+    return response
 
   def upload_image(self, filename, album_uri, caption=None, title=None, keywords=None):
     headers = {
@@ -114,6 +120,5 @@ class Connection:
     if keywords:
       headers['X-Smug-Keywords']=keywords
       
-    with open("focuszetec.jpeg", "rb") as f:
-      data = f.read()
-      return self.raw_post(self.UPLOAD_URL, data=data, headers=headers)
+    with open(filename, "rb") as f:
+      return self.raw_post(self.UPLOAD_URL, data=f, headers=headers)

@@ -62,16 +62,16 @@ try:
 	#new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
 	#print new_node.uri + " - " + new_node.name
 
-	#new_node=Node(node.create_child_album(connection, 'aaaatestalbum2','aaaaatestalbum2','Public', 'A long description for the album'))
-	#print new_node.uri + " - " + new_node.name
-	#pprint(new_node.album)
-	#album=Album(SmugMugv2Utils.get_album(connection, new_node.album))
+	new_node=Node(node.create_child_album(connection, 'aaaatestalbum2','aaaaatestalbum2','Public', 'A long description for the album'))
+	print new_node.uri + " - " + new_node.name
+	pprint(new_node.album)
+	album=Album(SmugMugv2Utils.get_album(connection, new_node.album))
 
-	#pprint(connection.upload_image('focuszetec.jpeg', 
-	#										'/api/v2/album/25cj3F', 
-	#										caption='A test caption - ' + str(datetime.now()),
-	#										title='A test title - ' + str(datetime.now()),
-	#										keywords='key1; key2; key3'))
+	pprint(connection.upload_image('focuszetec.jpeg', 
+											album.uri, 
+											caption='A test caption - ' + str(datetime.now()),
+											title='A test title - ' + str(datetime.now()),
+											keywords='key1; key2; key3'))
 
 except SmugMugv2Exception as e:
 	print "Error: " + str(e)
