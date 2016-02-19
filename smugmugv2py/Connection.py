@@ -3,9 +3,9 @@
 from rauth import OAuth1Service, OAuth1Session
 from urlparse import urlsplit, urlunsplit, parse_qsl
 from urllib import urlencode
-from json import loads
+from json import loads, dumps
 import requests
-import smugmugv2py 
+import smugmugv2py
 from os import path
 
 from pprint import pprint
@@ -20,7 +20,7 @@ class Connection:
   __AUTHORIZE_URL = __OAUTH_ORIGIN + '/services/oauth/1.0a/authorize'
 
   __API_ORIGIN = 'https://api.smugmug.com'
-  
+
   __SERVICE = None
   __SESSION = requests.Session()
 
@@ -89,8 +89,10 @@ class Connection:
       raise smugmugv2py.SmugMugv2Exception(response["Message"])
 
   def post(self, uri, headers=None, data=None):
-    return self.raw_post(self.__API_ORIGIN + uri, headers, data)
-  
+    return self.raw_post(self.__API_ORIGIN + uri,
+      headers=headers,
+      data=data)
+
   def raw_post(self, uri, headers=None, data=None):
     response=loads(self.__SESSION.post(
       uri,
@@ -101,16 +103,41 @@ class Connection:
 
     return response
 
+  def delete(self, uri):
+    headers={
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+
+    return loads(self.__SESSION.delete(
+      self.__API_ORIGIN + uri,
+      headers=headers,
+      params={'_verbosity': '1'},
+      data=None).content)
+
+  def patch(self, uri, data):
+    headers={
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+
+    return loads(self.__SESSION.patch(
+      self.__API_ORIGIN + uri,
+      headers=headers,
+      params={'_verbosity': '1'},
+      data=dumps(data),
+      header_auth=True).content)
+
   def upload_image(self, filename, album_uri, caption=None, title=None, keywords=None):
     headers = {
-      'X-Smug-ResponseType': 'JSON', 
+      'X-Smug-ResponseType': 'JSON',
       'X-Smug-Version': 'v2',
       'Content-Type': 'none',
-      'X-Smug-AlbumUri': album_uri, 
-      'X-Smug-FileName': filename, 
+      'X-Smug-AlbumUri': album_uri,
+      'X-Smug-FileName': filename,
       'Content-Length': path.getsize(filename),
     }
-    
+
     if caption:
       headers['X-Smug-Caption']=caption
 
@@ -119,6 +146,6 @@ class Connection:
 
     if keywords:
       headers['X-Smug-Keywords']=keywords
-      
+
     with open(filename, "rb") as f:
       return self.raw_post(self.UPLOAD_URL, data=f, headers=headers)

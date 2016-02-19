@@ -22,3 +22,8 @@ class Album:
 
 		return ret
 
+	def delete_album(self, connection):
+		return connection.delete(self.uri)
+
+	def change_album(self, connection, changes):
+		return connection.patch(self.uri, changes)["Response"]["Album"]

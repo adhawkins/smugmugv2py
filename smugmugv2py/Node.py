@@ -49,12 +49,12 @@ class Node:
 
 		if description:
 			params['Description']=description
-			
+
 		return connection.post(self.__child_nodes, data=dumps(params), headers=headers)
 
 	def create_child_folder(self, connection, name, url, privacy, description=None):
 		response = self.__create_child_node(connection, 'Folder', name, url, privacy, description)
-	
+
 		if not "Node" in response["Response"]:
 			pprint(response)
 
@@ -62,8 +62,14 @@ class Node:
 
 	def create_child_album(self, connection, name, url, privacy, description=None):
 		response = self.__create_child_node(connection, 'Album', name, url, privacy, description)
-	
+
 		if not "Node" in response["Response"]:
 			pprint(response)
-	
+
 		return response["Response"]["Node"]
+
+	def delete_node(self, connection):
+		return connection.delete(self.uri)
+
+	def change_node(self, connection, changes):
+		return connection.patch(self.uri, changes)["Response"]["Node"]
