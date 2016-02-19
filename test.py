@@ -55,7 +55,7 @@ try:
 	user=User(SmugMugv2Utils.get_authorized_user(connection))
 	print "User: " + user.nickname + " (" + user.name + ")"
 
-	#node = Node(SmugMugv2Utils.get_node(connection, user.node))
+	node = Node(SmugMugv2Utils.get_node(connection, user.node))
 	#print_node(node, 0)
 
 	#new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
