@@ -1,6 +1,10 @@
 class AlbumImage:
 	def __init__(self, image):
-		self.uri = image["Uri"]
+		if "Image" in image["Uris"]:
+			self.uri = image["Uris"]["Image"]
+		else:
+			self.uri = image["Uri"]
+
 		self.title = image["Title"]
 		self.caption = image["Caption"]
 		self.keywords = image["Keywords"]
