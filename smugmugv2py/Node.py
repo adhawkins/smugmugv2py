@@ -43,7 +43,7 @@ class Node:
 		params = {
 			'Type': type,
 			'Name': name,
-			'UrlName': url.capitalize(),
+			'UrlName': url,
 			'Privacy': privacy,
 		}
 
