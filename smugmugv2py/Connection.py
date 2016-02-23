@@ -5,7 +5,6 @@ from urlparse import urlsplit, urlunsplit, parse_qsl
 from urllib import urlencode
 from json import loads, dumps
 import requests
-import smugmugv2py
 from os import path
 
 from pprint import pprint
