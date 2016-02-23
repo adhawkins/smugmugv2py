@@ -13,6 +13,10 @@ class Album:
 		if self.image_count:
 			self.__images = album["Uris"]["AlbumImages"]
 
+	@classmethod
+	def get_album(cls, connection, album_uri):
+		return cls(connection.get(album_uri)["Album"])
+
 	def get_images(self, connection):
 		ret=[]
 

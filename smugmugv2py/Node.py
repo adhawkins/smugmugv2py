@@ -24,6 +24,10 @@ class Node:
 			else:
 				self.__child_nodes = node["Uris"]["ChildNodes"]
 
+	@classmethod
+	def get_node(cls, connection, node_uri):
+		return cls(connection.get(node_uri)["Node"])
+
 	def get_children(self, connection):
 		ret=[]
 
@@ -61,7 +65,7 @@ class Node:
 		if not "Node" in response["Response"]:
 			pprint(response)
 
-		return response["Response"]["Node"]
+		return Node(response["Response"]["Node"])
 
 	def create_child_album(self, connection, name, url, privacy, description=None):
 		response = self.__create_child_node(connection, 'Album', name, url, privacy, description)
@@ -69,7 +73,7 @@ class Node:
 		if not "Node" in response["Response"]:
 			pprint(response)
 
-		return response["Response"]["Node"]
+		return Node(response["Response"]["Node"])
 
 	def delete_node(self, connection):
 		return connection.delete(self.uri)
