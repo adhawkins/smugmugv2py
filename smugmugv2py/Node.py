@@ -4,11 +4,14 @@ from pprint import pprint
 class Node:
 	def __init__(self, node):
 		self.uri = node["Uri"]
+		self.description = node["Description"]
 		self.name = node["Name"]
 		self.url_name = node["UrlName"]
 		self.type = node["Type"]
 		self.privacy = node["Privacy"]
 		self.has_children = node["HasChildren"]
+		self.sort_method = node["SortMethod"]
+		self.sort_direction = node["SortDirection"]
 
 		if self.type == "Album":
 			if "Uri" in node["Uris"]["Album"]:
