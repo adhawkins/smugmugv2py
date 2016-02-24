@@ -1,3 +1,5 @@
+from iso8601 import parse_date
+
 class AlbumImage:
 	def __init__(self, image):
 		if "Image" in image["Uris"]:
@@ -9,6 +11,8 @@ class AlbumImage:
 		self.caption = image["Caption"]
 		self.keywords = image["Keywords"]
 		self.filename = image["FileName"]
+		self.archived_size = image["ArchivedSize"]
+		self.last_updated = parse_date(image["LastUpdated"]).replace(tzinfo=None)
 
 	@classmethod
 	def get_album_image(cls, connection, image_uri):
