@@ -52,42 +52,43 @@ if not token or not secret:
 connection.authorise_connection(token, secret)
 
 try:
-	user=User(SmugMugv2Utils.get_authorized_user(connection))
+	user = User.get_authorized_user(connection)
 	print "User: " + user.nickname + " (" + user.name + ")"
 
-	node = Node(SmugMugv2Utils.get_node(connection, user.node))
+	node = Node.get_node(connection,user.node)
 	#print_node(node, 0)
 
 	#new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
 	#print new_node.uri + " - " + new_node.name
 
-	#new_node=Node(node.create_child_album(connection, 'aaaatestalbum2','aaaaatestalbum2','Public', 'A long description for the album'))
-	#print new_node.uri + " - " + new_node.name
-	#pprint(new_node.album)
-	#album=Album(SmugMugv2Utils.get_album(connection, new_node.album))
+	new_node=node.create_child_album(connection, 'aaaatestalbum2','Aaaaaatestalbum2','Public', 'A long description for the album')
+	print new_node.uri + " - " + new_node.name
+	pprint(new_node.album)
+	album=Album.get_album(connection, new_node.album)
 
-	#pprint(connection.upload_image('focuszetec.jpeg',
-	#										album.uri,
-	#										caption='A test caption - ' + str(datetime.now()),
-	#										title='A test title - ' + str(datetime.now()),
-	#										keywords='key1; key2; key3'))
+	pprint(connection.upload_image('focuszetec.jpeg',
+											album.uri,
+											caption='A test caption - ' + str(datetime.now()),
+											title='A test title - ' + str(datetime.now()),
+											keywords='key1; key2; key3'))
+	pprint(new_node.delete_node(connection))
 
-	delete_node=Node(node.create_child_folder(connection, 'deletetest','Deletetest','Public'))
-	print "Name: " + delete_node.name + ", url: " + delete_node.url_name
-	pprint(delete_node.delete_node(connection))
+	#delete_node=Node(node.create_child_folder(connection, 'deletetest','Deletetest','Public'))
+	#print "Name: " + delete_node.name + ", url: " + delete_node.url_name
+	#pprint(delete_node.delete_node(connection))
 
-	rename_node=Node(node.create_child_folder(connection, 'renametest','Renametest','Public'))
-	print "Name: " + rename_node.name + ", url: " + rename_node.url_name
+	#rename_node=Node(node.create_child_folder(connection, 'renametest','Renametest','Public'))
+	#print "Name: " + rename_node.name + ", url: " + rename_node.url_name
 
-	rename = {
-		"UrlName": "Renametestchange"
-	}
+	#rename = {
+	#	"UrlName": "Renametestchange"
+	#}
 
-	renamed_node=Node(rename_node.change_node(connection, rename))
-	print "Renamed Name: " + renamed_node.name + ", url: " + renamed_node.url_name
-	found_renamed_node=Node(SmugMugv2Utils.get_node(connection, rename_node.uri))
-	print "Found Renamed Name: " + found_renamed_node.name + ", url: " + found_renamed_node.url_name
-	pprint(connection.delete(renamed_node.uri))
+	#renamed_node=Node(rename_node.change_node(connection, rename))
+	#print "Renamed Name: " + renamed_node.name + ", url: " + renamed_node.url_name
+	#found_renamed_node=Node(SmugMugv2Utils.get_node(connection, rename_node.uri))
+	#print "Found Renamed Name: " + found_renamed_node.name + ", url: " + found_renamed_node.url_name
+	#pprint(connection.delete(renamed_node.uri))
 except SmugMugv2Exception as e:
 	print "Error: " + str(e)
 
