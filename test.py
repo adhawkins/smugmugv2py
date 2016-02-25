@@ -7,6 +7,7 @@ from pprint import pprint
 from test_setup import api_key, api_secret, token, secret
 from datetime import datetime
 from json import dumps
+from requests import exceptions
 
 def do_indent(indent):
 	for x in range(0, indent):
@@ -66,12 +67,13 @@ try:
 	pprint(new_node.album)
 	album=Album.get_album(connection, new_node.album)
 
-	pprint(connection.upload_image('focuszetec.jpeg',
-											album.uri,
-											caption='A test caption - ' + str(datetime.now()),
-											title='A test title - ' + str(datetime.now()),
-											keywords='key1; key2; key3'))
-	pprint(new_node.delete_node(connection))
+	try:
+		pprint(connection.upload_image('focuszetec.jpeg',
+											album.uri))
+	except exceptions.ConnectionError as e:
+		print "ConnectionError: " + str(e)
+
+	#pprint(new_node.delete_node(connection))
 
 	#delete_node=Node(node.create_child_folder(connection, 'deletetest','Deletetest','Public'))
 	#print "Name: " + delete_node.name + ", url: " + delete_node.url_name
