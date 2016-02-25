@@ -63,8 +63,7 @@ try:
 	#print new_node.uri + " - " + new_node.name
 
 	new_node=node.create_child_album(connection, 'aaaatestalbum2','Aaaaaatestalbum2','Public', 'A long description for the album')
-	print new_node.uri + " - " + new_node.name
-	pprint(new_node.album)
+	print new_node.uri + " - " + new_node.name + new_node.album
 	album=Album.get_album(connection, new_node.album)
 
 	try:
@@ -73,7 +72,8 @@ try:
 	except exceptions.ConnectionError as e:
 		print "ConnectionError: " + str(e)
 
-	pprint(new_node.delete_node(connection))
+		print "Deleting node after failed upload"
+		new_node.delete_node(connection)
 
 	#delete_node=Node(node.create_child_folder(connection, 'deletetest','Deletetest','Public'))
 	#print "Name: " + delete_node.name + ", url: " + delete_node.url_name
