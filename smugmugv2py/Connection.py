@@ -54,7 +54,9 @@ class Connection:
     self.__rt, self.__rts = self.__SERVICE.get_request_token(params={'oauth_callback': 'oob'})
 
     auth_url = self.__add_auth_params(
-          self.__SERVICE.get_authorize_url(self.__rt), access=access, permissions=permissions)
+          self.__SERVICE.get_authorize_url(self.__rt),
+          access=access,
+          permissions=permissions)
 
     return auth_url
 
@@ -137,13 +139,13 @@ class Connection:
       'Content-Length': path.getsize(filename),
     }
 
-    if caption:
+    if caption is not None:
       headers['X-Smug-Caption']=caption
 
-    if title:
+    if title is not None:
       headers['X-Smug-Title']=title
 
-    if keywords:
+    if keywords is not None:
       headers['X-Smug-Keywords']=keywords
 
     with open(filename, "rb") as f:
