@@ -61,4 +61,3 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-test_setup.py
