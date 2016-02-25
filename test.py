@@ -73,7 +73,7 @@ try:
 	except exceptions.ConnectionError as e:
 		print "ConnectionError: " + str(e)
 
-	#pprint(new_node.delete_node(connection))
+	pprint(new_node.delete_node(connection))
 
 	#delete_node=Node(node.create_child_folder(connection, 'deletetest','Deletetest','Public'))
 	#print "Name: " + delete_node.name + ", url: " + delete_node.url_name
