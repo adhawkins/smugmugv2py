@@ -6,6 +6,7 @@ from urllib import urlencode
 from json import loads, dumps
 import requests
 from os import path
+from mimetypes import guess_type
 
 from pprint import pprint
 
@@ -133,7 +134,7 @@ class Connection:
     headers = {
       'X-Smug-ResponseType': 'JSON',
       'X-Smug-Version': 'v2',
-      'Content-Type': 'none',
+      'Content-Type': guess_type(filename)[0],
       'X-Smug-AlbumUri': album_uri,
       'X-Smug-FileName': filename,
       'Content-Length': path.getsize(filename),
@@ -149,4 +150,5 @@ class Connection:
       headers['X-Smug-Keywords']=keywords
 
     with open(filename, "rb") as f:
-      return self.raw_post(self.UPLOAD_URL, data=f, headers=headers)
+      data=f.read()
+      return self.raw_post(self.UPLOAD_URL, data=data, headers=headers)
