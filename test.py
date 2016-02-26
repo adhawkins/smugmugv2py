@@ -62,7 +62,15 @@ try:
 	#new_node=Node(node.create_child_folder(connection, 'aaaatestnode2','aaaaatestnode2','Public'))
 	#print new_node.uri + " - " + new_node.name
 
-	new_node=node.create_child_album(connection, 'aaaatestalbum2','Aaaaaatestalbum2','Public', 'A long description for the album')
+	new_node = None
+
+	for thisnode in node.get_children(connection):
+		if thisnode.url_name == "Testalbum":
+			new_node=thisnode
+
+	if new_node is None:
+		new_node=node.create_child_album(connection, 'testalbum','Testalbum','Public', 'A long description for the album')
+
 	print new_node.uri + " - " + new_node.name + new_node.album
 	album=Album.get_album(connection, new_node.album)
 
