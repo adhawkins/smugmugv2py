@@ -93,7 +93,7 @@ class Connection:
           return response["Response"]
         else:
           raise smugmugv2py.SmugMugv2Exception(response["Message"])
-      except requests.exceptions.RequestException:
+      except requests.exceptions.RequestException as e:
         print "Caught exception " + str(e) + ", attempt: " + str(attempt)
         attempt += 1
         if attempt == 5:
