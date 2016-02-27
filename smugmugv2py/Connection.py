@@ -74,21 +74,30 @@ class Connection:
             access_token_secret=token_secret)
 
   def get(self, uri):
-    response=loads(self.__SESSION.get(
-          self.__API_ORIGIN + uri,
-          headers={'Accept': 'application/json'},
-          params={
-            '_verbosity': '1',
-            'start': '1',
-            'count': '9999'
-          },
-          header_auth=True
-        ).text)
+    attempt = 0
+    while True:
+      try:
+        print "Get, attempt: " + str(attempt)
+        response=loads(self.__SESSION.get(
+              self.__API_ORIGIN + uri,
+              headers={'Accept': 'application/json'},
+              params={
+                '_verbosity': '1',
+                'start': '1',
+                'count': '9999'
+              },
+              header_auth=True
+            ).text)
 
-    if "Response" in response:
-      return response["Response"]
-    else:
-      raise smugmugv2py.SmugMugv2Exception(response["Message"])
+        if "Response" in response:
+          return response["Response"]
+        else:
+          raise smugmugv2py.SmugMugv2Exception(response["Message"])
+      except requests.exceptions.RequestException:
+        print "Caught exception " + str(e) + ", attempt: " + str(attempt)
+        attempt += 1
+        if attempt == 5:
+          raise
 
   def post(self, uri, headers=None, data=None):
     return self.raw_post(self.__API_ORIGIN + uri,
