@@ -31,7 +31,7 @@ def print_node(node, indent):
 	for child in children:
 		print_node(child, indent+1)
 
-connection = Connection(api_key, api_secret)
+connection = Connection(api_key, api_secret, user_agent="Test user agent/2.4")
 
 if not token or not secret:
 	auth_url = connection.get_auth_url(access="Full", permissions="Modify")

@@ -10,6 +10,8 @@ from mimetypes import guess_type
 from smugmugv2py.SmugMugv2Exception import SmugMugv2Exception
 from pprint import pprint
 
+VERSION_STR = '0.1'
+
 class Connection:
   BASE_URL = '/api/v2'
   UPLOAD_URL = 'http://upload.smugmug.com/'
@@ -24,7 +26,11 @@ class Connection:
   __SERVICE = None
   __SESSION = requests.Session()
 
-  def __init__(self, api_key, api_secret):
+  def __init__(self, api_key, api_secret, user_agent = None):
+    self.__user_agent = 'smugmugv2py/' + VERSION_STR
+    if user_agent:
+      self.__user_agent += " - " + user_agent
+
     if self.__SERVICE is None:
       self.__SERVICE = OAuth1Service(
         name='smugmug-oauth-web-demo',
@@ -80,7 +86,10 @@ class Connection:
         print "Get, attempt: " + str(attempt)
         response=loads(self.__SESSION.get(
               self.__API_ORIGIN + uri,
-              headers={'Accept': 'application/json'},
+              headers={
+                'Accept': 'application/json',
+                'User-Agent': self.__user_agent
+              },
               params={
                 '_verbosity': '1',
                 'start': '1',
@@ -105,6 +114,8 @@ class Connection:
       data=data)
 
   def raw_post(self, uri, headers=None, data=None):
+    headers['User-Agent'] = self.__user_agent
+
     response=loads(self.__SESSION.post(
       uri,
       headers=headers,
@@ -116,6 +127,7 @@ class Connection:
 
   def delete(self, uri):
     headers={
+      'User-Agent': self.__user_agent,
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }
@@ -128,6 +140,7 @@ class Connection:
 
   def patch(self, uri, data):
     headers={
+      'User-Agent': self.__user_agent,
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }
@@ -141,6 +154,7 @@ class Connection:
 
   def upload_image(self, filename, album_uri, caption=None, title=None, keywords=None):
     headers = {
+      'User-Agent': self.__user_agent,
       'X-Smug-ResponseType': 'JSON',
       'X-Smug-Version': 'v2',
       'Content-Type': guess_type(filename)[0],
