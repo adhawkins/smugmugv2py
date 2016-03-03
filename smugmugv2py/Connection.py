@@ -7,7 +7,7 @@ from json import loads, dumps
 import requests
 from os import path
 from mimetypes import guess_type
-
+from smugmugv2py.SmugMugv2Exception import SmugMugv2Exception
 from pprint import pprint
 
 class Connection:
@@ -92,7 +92,7 @@ class Connection:
         if "Response" in response:
           return response["Response"]
         else:
-          raise smugmugv2py.SmugMugv2Exception(response["Message"])
+          raise SmugMugv2Exception(response["Message"])
       except requests.exceptions.RequestException as e:
         print "Caught exception " + str(e) + ", attempt: " + str(attempt)
         attempt += 1
