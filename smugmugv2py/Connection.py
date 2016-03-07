@@ -9,8 +9,7 @@ from os import path
 from mimetypes import guess_type
 from smugmugv2py.SmugMugv2Exception import SmugMugv2Exception
 from pprint import pprint
-
-VERSION_STR = '0.1'
+from pkg_resources import get_distribution
 
 class Connection:
   BASE_URL = '/api/v2'
@@ -27,9 +26,11 @@ class Connection:
   __SESSION = requests.Session()
 
   def __init__(self, api_key, api_secret, user_agent = None):
-    self.__user_agent = 'smugmugv2py/' + VERSION_STR
+    self.__user_agent = 'smugmugv2py/' + get_distribution('smugmugv2py').version
     if user_agent:
       self.__user_agent += " - " + user_agent
+
+    print "Full user agent is '" + self.__user_agent + "'"
 
     if self.__SERVICE is None:
       self.__SERVICE = OAuth1Service(
