@@ -30,8 +30,6 @@ class Connection:
     if user_agent:
       self.__user_agent += " - " + user_agent
 
-    print "Full user agent is '" + self.__user_agent + "'"
-
     if self.__SERVICE is None:
       self.__SERVICE = OAuth1Service(
         name='smugmug-oauth-web-demo',
