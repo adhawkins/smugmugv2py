@@ -7,7 +7,6 @@ from json import loads, dumps
 import requests
 from os import path
 from mimetypes import guess_type
-from smugmugv2py.SmugMugv2Exception import SmugMugv2Exception
 from pprint import pprint
 from pkg_resources import get_distribution
 

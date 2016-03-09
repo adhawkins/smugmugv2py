@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from smugmugv2py import Connection, User, SmugMugv2Exception, Node, Album, AlbumImage, SmugMugv2Utils
+from smugmugv2py import Connection, User, Node, Album, AlbumImage, SmugMugv2Utils
 from sys import stdout, stdin
 from os import linesep, path
 from pprint import pprint
