@@ -1,6 +1,6 @@
 from iso8601 import parse_date
 
-class AlbumImage:
+class AlbumImage(object):
 	def __init__(self, image):
 		if "Image" in image["Uris"]:
 			self.uri = image["Uris"]["Image"]

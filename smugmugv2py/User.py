@@ -1,6 +1,6 @@
 from smugmugv2py import Connection
 
-class User:
+class User(object):
 	def __init__(self, json):
 		self.nickname = json["NickName"]
 		self.name = json["Name"]

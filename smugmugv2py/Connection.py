@@ -10,7 +10,7 @@ from mimetypes import guess_type
 from pprint import pprint
 from pkg_resources import get_distribution
 
-class Connection:
+class Connection(object):
   BASE_URL = '/api/v2'
   UPLOAD_URL = 'http://upload.smugmug.com/'
 

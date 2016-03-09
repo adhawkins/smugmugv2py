@@ -1,7 +1,7 @@
 from json import dumps
 from pprint import pprint
 
-class Node:
+class Node(object):
 	def __init__(self, node):
 		self.uri = node["Uri"]
 		self.description = node["Description"]

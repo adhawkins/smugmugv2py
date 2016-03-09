@@ -1,6 +1,6 @@
 from AlbumImage import AlbumImage
 
-class Album:
+class Album(object):
 	def __init__(self, album):
 		self.uri = album["Uri"]
 		self.name = album["Name"]
