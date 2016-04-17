@@ -31,7 +31,7 @@ def print_node(node, indent):
 	for child in children:
 		print_node(child, indent+1)
 
-if not api_key or api_secret:
+if not api_key or not api_secret:
   raise Exception('API key and secret are required. see test_setup.py')
 
 connection = Connection(api_key, api_secret, user_agent="Test user agent/2.4")
