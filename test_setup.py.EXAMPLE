@@ -1,0 +1,7 @@
+# copy this to test_setup.py and add your credentials. test_setup.py
+# is .gitignored so you won't accidentally commit your credentials.
+api_key = ""
+api_secret = ""
+token = ""
+secret = ""
+
