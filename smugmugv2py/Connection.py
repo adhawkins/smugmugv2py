@@ -9,6 +9,7 @@ from os import path
 from mimetypes import guess_type
 from pprint import pprint
 from pkg_resources import get_distribution
+import smugmugv2py
 
 class Connection(object):
 	BASE_URL = '/api/v2'
@@ -99,7 +100,8 @@ class Connection(object):
 				if "Response" in response:
 					return response["Response"]
 				else:
-					raise SmugMugv2Exception(response["Message"])
+					raise smugmugv2py.SmugMugv2Exception(response["Message"])
+
 			except requests.exceptions.RequestException as e:
 				print "Caught exception " + str(e) + ", attempt: " + str(attempt)
 				attempt += 1
