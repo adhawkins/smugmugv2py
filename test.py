@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from smugmugv2py import Connection, User, Node, Album, AlbumImage, SmugMugv2Utils
+from smugmugv2py import Connection, User, Node, Album, AlbumImage, SmugMugv2Exception
 from sys import stdout, stdin
 from os import linesep, path
 from pprint import pprint
@@ -14,7 +14,7 @@ def do_indent(indent):
 		stdout.write(" ")
 
 def print_album(node, indent):
-	album = Album(SmugMugv2Utils.get_album(connection, node.album))
+	album = Album(Album.get_album(connection, node.album))
 	stdout.write(", " + str(album.image_count) + " images")
 	images = album.get_images(connection)
 	for image in images:
@@ -30,6 +30,9 @@ def print_node(node, indent):
 	children=node.get_children(connection)
 	for child in children:
 		print_node(child, indent+1)
+
+if not api_key or not api_secret:
+  raise Exception('API key and secret are required. see test_setup.py')
 
 connection = Connection(api_key, api_secret, user_agent="Test user agent/2.4")
 
@@ -69,13 +72,14 @@ try:
 			new_node=thisnode
 
 	if new_node is None:
-		new_node=node.create_child_album(connection, 'testalbum','Testalbum','Public', 'A long description for the album')
+		# creating the child folder privately so people can run this test script 'safely'.
+		new_node=node.create_child_album(connection, 'testalbum','Testalbum','Private', 'A long description for the album')
 
 	print new_node.uri + " - " + new_node.name + new_node.album
 	album=Album.get_album(connection, new_node.album)
 
 	try:
-		pprint(connection.upload_image('focuszetec.jpeg',
+		pprint(connection.upload_image('adhawkins_github_avatar.jpg',
 											album.uri))
 	except exceptions.ConnectionError as e:
 		print "ConnectionError: " + str(e)
