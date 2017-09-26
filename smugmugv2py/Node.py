@@ -10,15 +10,17 @@ class Node(object):
 		self.type = node["Type"]
 		self.privacy = node["Privacy"]
 		self.has_children = node["HasChildren"]
-		self.sort_method = node["SortMethod"]
-		self.sort_direction = node["SortDirection"]
 
-		if self.type == "Album":
+		if self.type == "Album" or self.type == "System Album":
+			self.sort_method = node["SortMethod"]
+			self.sort_direction = node["SortDirection"]
 			if "Uri" in node["Uris"]["Album"]:
 				self.album = node["Uris"]["Album"]["Uri"]
 			else:
 				self.album = node["Uris"]["Album"]
-		else:
+		elif self.type == "Folder":
+			self.sort_method = node["SortMethod"]
+			self.sort_direction = node["SortDirection"]
 			if "Uri" in node["Uris"]["ChildNodes"]:
 				self.__child_nodes = node["Uris"]["ChildNodes"]["Uri"]
 			else:
