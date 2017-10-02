@@ -14,7 +14,7 @@ def do_indent(indent):
 		stdout.write(" ")
 
 def print_album(node, indent):
-	album = Album(Album.get_album(connection, node.album))
+	album = Album.get_album(connection, node.album)
 	stdout.write(", " + str(album.image_count) + " images")
 	images = album.get_images(connection)
 	for image in images:
