@@ -14,7 +14,7 @@ def do_indent(indent):
 		stdout.write(" ")
 
 def print_album(node, indent):
-	album = Album.get_album(connection, node.album)
+	album = Album.get_album(connection, node.album_uri)
 	stdout.write(", " + str(album.image_count) + " images")
 	images = album.get_images(connection)
 	for image in images:
@@ -75,8 +75,8 @@ try:
 		# creating the child folder privately so people can run this test script 'safely'.
 		new_node=node.create_child_album(connection, 'testalbum','Testalbum','Private', 'A long description for the album')
 
-	print new_node.uri + " - " + new_node.name + new_node.album
-	album=Album.get_album(connection, new_node.album)
+	print new_node.uri + " - " + new_node.name + new_node.album_uri
+	album=Album.get_album(connection, new_node.album_uri)
 
 	try:
 		pprint(connection.upload_image('adhawkins_github_avatar.jpg',
