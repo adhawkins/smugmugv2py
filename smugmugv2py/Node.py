@@ -15,9 +15,9 @@ class Node(object):
 			self.sort_method = node["SortMethod"]
 			self.sort_direction = node["SortDirection"]
 			if "Uri" in node["Uris"]["Album"]:
-				self.album = node["Uris"]["Album"]["Uri"]
+				self.album_uri = node["Uris"]["Album"]["Uri"]
 			else:
-				self.album = node["Uris"]["Album"]
+				self.album_uri = node["Uris"]["Album"]
 		elif self.type == "Folder":
 			self.sort_method = node["SortMethod"]
 			self.sort_direction = node["SortDirection"]
