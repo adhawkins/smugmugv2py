@@ -5,7 +5,7 @@ Python library for the SmugMug v2 API
 
 Install the freshest version
 
-    pip install --update https://github.com/adhawkins/smugmugv2py/tarball/master
+    pip install --upgrade https://github.com/adhawkins/smugmugv2py/tarball/master
 
 # want to help?
 
