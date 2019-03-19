@@ -160,7 +160,7 @@ class Connection(object):
 			'Content-Type': guess_type(filename)[0],
 			'X-Smug-AlbumUri': album_uri,
 			'X-Smug-FileName': filename,
-			'Content-Length': path.getsize(filename),
+			'Content-Length': str(path.getsize(filename)),
 		}
 
 		if caption is not None:
